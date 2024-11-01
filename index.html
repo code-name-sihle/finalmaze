@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maze Runner - Start Menu</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(-45deg, #000000, #003300, #006600, #00ff00);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            overflow: hidden;
+        }
+
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        #mainMenu {
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 40px;
+            border-radius: 20px;
+            color: #00ff00;
+            border: 2px solid #00ff00;
+            box-shadow: 0 0 20px #00ff00;
+        }
+
+        h1 {
+            font-size: 48px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 20px;
+            margin-top: 15px;
+            cursor: pointer;
+            background-color: #006600;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.1s;
+            width: 200px;
+        }
+
+        button:hover {
+            background-color: #008800;
+            transform: scale(1.05);
+        }
+
+        button i {
+            margin-right: 10px;
+        }
+
+        #dialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #00ff00;
+            padding: 30px;
+            border-radius: 15px;
+            font-size: 18px;
+            z-index: 10;
+            border: 2px solid #00ff00;
+            box-shadow: 0 0 20px #00ff00;
+            max-width: 80%;
+        }
+
+        #dialog button {
+            margin-top: 20px;
+        }
+
+        #dialogContent h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .objective-item {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div id="particles"></div>
+    
+    <div id="mainMenu">
+        <h1>MAZE RUNNER</h1>
+        <div class="button-container">
+            <button id="startGameButton"><i class="fas fa-play"></i>Start Game</button>
+            <button id="instructions"><i class="fas fa-book"></i>Instructions</button>
+            <button id="credits"><i class="fas fa-award"></i>Credits</button>
+        </div>
+    </div>
+
+    <div id="dialog">
+        <div id="dialogContent"></div>
+        <button id="closeDialog">Close</button>
+    </div>
+
+    <audio id="backgroundMusic" loop>
+        <source src="asset/SoundTheme.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        console.log("Script initialized");
+        // Initialize particles.js
+        particlesJS('particles', {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: '#00ff00' },
+                shape: { type: 'circle' },
+                opacity: { value: 0.5, random: true },
+                size: { value: 3, random: true },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#00ff00',
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: 'none',
+                    random: false,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: { enable: true, mode: 'repulse' },
+                    onclick: { enable: true, mode: 'push' },
+                    resize: true
+                }
+            },
+            retina_detect: true
+        });
+        console.log("Particles initialized");
+
+        document.getElementById('startGameButton').addEventListener('click', function() {
+            console.log("Start game button clicked");
+            window.location.href = 'start.html';
+        });
+
+        document.getElementById('instructions').addEventListener('click', function() {
+            console.log("Instructions button clicked");
+            showDialog('Instructions', `
+                <div class="objective-item">
+                    <strong>Controls:</strong><br>
+                    Use W, A, S, D to move the player around the maze
+                </div>
+                <div class="objective-item">
+                    <strong>Level 1:</strong><br>
+                    🎯 Reach the exit before the timer runs out
+                </div>
+                <div class="objective-item">
+                    <strong>Level 2:</strong><br>
+                    💰 Collect all coins<br>
+                    🎯 Reach the exit before time expires
+                </div>
+                <div class="objective-item">
+                    <strong>Level 3:</strong><br>
+                    🧟 Avoid the zombies<br>
+                    💰 Collect all coins<br>
+                    🎯 Reach the exit before time expires
+                </div>
+            `);
+        });
+
+        document.getElementById('credits').addEventListener('click', function() {
+            showDialog('Credits', 'Maze Runner Game created by Apex Arcade.<br>' +
+            ' Special thanks to the Three.js community!'
+            );
+        });
+
+        document.getElementById('closeDialog').addEventListener('click', function() {
+            document.getElementById('dialog').style.display = 'none'; // Close the dialog
+        });
+
+        function showDialog(title, content) {
+            document.getElementById('dialogContent').innerHTML = `<h2>${title}</h2><p>${content}</p>`;
+            document.getElementById('dialog').style.display = 'block'; // Show the dialog
+        }
+
+        // Music control
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        let isMusicPlaying = false;
+    
+        // Function to toggle background music
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                backgroundMusic.pause();
+                isMusicPlaying = false;
+                musicButton.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            } else {
+                backgroundMusic.play();
+                isMusicPlaying = true;
+                musicButton.innerHTML = '<i class="fas fa-volume-up"></i>';
+            }
+        }
+    
+        // Auto-play music when the page loads
+        window.addEventListener('load', () => {
+            backgroundMusic.volume = 0.5; // Set volume to 50%
+            toggleMusic();
+        });
+    
+        // function to play background music
+        const musicButton = document.createElement('button');
+        musicButton.innerHTML = '<i class="fas fa-volume-mute"></i>';
+        musicButton.style.position = 'fixed';
+        musicButton.style.bottom = '20px';
+        musicButton.style.right = '20px';
+        musicButton.addEventListener('click', toggleMusic);
+        document.body.appendChild(musicButton);
+    </script>
+</body>
+</html>
