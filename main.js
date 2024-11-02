@@ -493,22 +493,56 @@ function level3() {
 }
 
 // Function to handle level transitions
+// function handleLevelTransition() {
+//   console.log("Handling level transition for level:", currentLevel);
+//   if (currentLevel === 1) {
+//     setTimeout(() => {
+//       level2(); // Move to Level 2
+//     }, 100);
+//   }
+//   if (currentLevel === 2) {
+//     setTimeout(() => {
+//       level3(); // Move to Level 3
+//     }, 100);
+//   } else if (currentLevel === 3) {
+//     clearInterval(timerId); // Stop the timer
+//     showGameWon(); // Show game won modal as the game is completed
+//   }
+// }
+
+// Function to handle level transitions
 function handleLevelTransition() {
   console.log("Handling level transition for level:", currentLevel);
   if (currentLevel === 1) {
+    showLevelTransitionModal(timeLeft); // Show transition modal with time left
     setTimeout(() => {
-      level2(); // Move to Level 2
-    }, 100);
+      level2(); // Move to Level 2 after 3 seconds
+    }, 3000); // 3 seconds delay
   }
   if (currentLevel === 2) {
+    showLevelTransitionModal(timeLeft); // Show transition modal with time left
     setTimeout(() => {
-      level3(); // Move to Level 3
-    }, 100);
+      level3(); // Move to Level 3 after 3 seconds
+    }, 3000); // 3 seconds delay
   } else if (currentLevel === 3) {
     clearInterval(timerId); // Stop the timer
     showGameWon(); // Show game won modal as the game is completed
   }
 }
+
+// Function to show the level transition modal
+function showLevelTransitionModal(timeRemaining) {
+  const message = `You completed Level ${currentLevel} with ${timeRemaining} seconds remaining!`;
+  document.getElementById('levelTransitionMessage').innerText = message;
+  document.getElementById('levelTransitionModal').style.display = 'flex'; // Show the modal
+}
+
+// Add event listener for the continue button
+document.getElementById('continueButton').addEventListener('click', () => {
+  document.getElementById('levelTransitionModal').style.display = 'none'; // Hide the modal
+});
+
+
 // Function to reset the player position at the start of each level
 function resetPlayerPosition() {
   if (character) {
