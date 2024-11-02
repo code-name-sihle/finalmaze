@@ -455,6 +455,77 @@ let timerStarted = false;
 let isPaused = false;
 let pauseButton;
 
+// Initialize high score arrays for each level
+let highScoresLevel1 = [];
+let highScoresLevel2 = [];
+let highScoresLevel3 = [];
+
+// Function to sort and keep top 5 scores
+// function updateHighScores(level, score) {
+//   let highScores;
+//   if (level === 1) {
+//     highScores = highScoresLevel1;
+//   } else if (level === 2) {
+//     highScores = highScoresLevel2;
+//   } else if (level === 3) {
+//     highScores = highScoresLevel3;
+//   }
+
+//   // Add the new score and sort the array
+//   highScores.push(score);
+//   highScores.sort((a, b) => b - a); // Sort in descending order
+
+//   // Keep only the top 5 scores
+//   if (highScores.length > 5) {
+//     highScores.pop(); // Remove the lowest score if more than 5
+//   }
+// }
+// function updateHighScores(level, score) {
+//   let highScores;
+//   const highScoresKey = `highScoresLevel${level}`;
+
+//   // Retrieve existing high scores from localStorage
+//   const existingScores = JSON.parse(localStorage.getItem(highScoresKey)) || [];
+
+//   // Add the new score and sort the array
+//   existingScores.push(score);
+//   existingScores.sort((a, b) => b - a); // Sort in descending order
+
+//   // Keep only the top 5 scores
+//   if (existingScores.length > 5) {
+//     existingScores.pop(); // Remove the lowest score if more than 5
+//   }
+
+//   // Save the updated high scores back to localStorage
+//   localStorage.setItem(highScoresKey, JSON.stringify(existingScores));
+// }
+// function loadHighScores(level) {
+//   const highScoresKey = `highScoresLevel${level}`;
+//   const existingScores = JSON.parse(localStorage.getItem(highScoresKey)) || [];
+//   return existingScores;
+// }
+function updateHighScores(level, score) {
+  const highScoresKey = `highScoresLevel${level}`;
+  const existingScores = JSON.parse(localStorage.getItem(highScoresKey)) || [];
+  console.log("Existing Scores Before Update:", existingScores);
+  // Add the new score and sort the array
+  existingScores.push(score);
+  existingScores.sort((a, b) => b - a); // Sort in descending order
+
+  // Keep only the top 5 scores
+  if (existingScores.length > 5) {
+      existingScores.pop(); // Remove the lowest score if more than 5
+  }
+
+  // Save the updated high scores back to localStorage
+  localStorage.setItem(highScoresKey, JSON.stringify(existingScores));
+  console.log("Updated Scores After Update:", existingScores);
+}
+
+function loadHighScores(level) {
+  const highScoresKey = `highScoresLevel${level}`;
+  return JSON.parse(localStorage.getItem(highScoresKey)) || [];
+}
 // Function to start Level 1
 function level1() {
   timeLeft = 60; // 1-minute countdown
@@ -511,38 +582,134 @@ function level3() {
 // }
 
 // Function to handle level transitions
+// function handleLevelTransition() {
+//   console.log("Handling level transition for level:", currentLevel);
+//   if (currentLevel === 1) {
+//     showLevelTransitionModal(timeLeft); // Show transition modal with time left
+//     setTimeout(() => {
+//       level2(); // Move to Level 2 after 3 seconds
+//     }, 3000); // 3 seconds delay
+//   }
+//   if (currentLevel === 2) {
+//     showLevelTransitionModal(timeLeft); // Show transition modal with time left
+//     setTimeout(() => {
+//       level3(); // Move to Level 3 after 3 seconds
+//     }, 3000); // 3 seconds delay
+//   } else if (currentLevel === 3) {
+//     clearInterval(timerId); // Stop the timer
+//     showGameWon(); // Show game won modal as the game is completed
+//   }
+// }
+
+// // Function to show the level transition modal
+// function showLevelTransitionModal(timeRemaining) {
+//   const message = `You completed Level ${currentLevel} with ${timeRemaining} seconds remaining!`;
+//   document.getElementById('levelTransitionMessage').innerText = message;
+//   document.getElementById('levelTransitionModal').style.display = 'flex'; // Show the modal
+// }
+// function handleLevelTransition() {
+//   console.log("Handling level transition for level:", currentLevel);
+//   const score = timeLeft * 5; // Calculate score based on time remaining
+
+//   // Update high scores for the current level
+//   updateHighScores(currentLevel, score);
+
+//   if (currentLevel === 1) {
+//     showLevelTransitionModal(timeLeft, score, highScoresLevel1); // Show transition modal with time left and score
+//     setTimeout(() => {
+//       level2(); // Move to Level 2 after 3 seconds
+//     }, 3000); // 3 seconds delay
+//   }
+//   if (currentLevel === 2) {
+//     showLevelTransitionModal(timeLeft, score, highScoresLevel2); // Show transition modal with time left and score
+//     setTimeout(() => {
+//       level3(); // Move to Level 3 after 3 seconds
+//     }, 3000); // 3 seconds delay
+//   } else if (currentLevel === 3) {
+//     clearInterval(timerId); // Stop the timer
+//     showGameWon(); // Show game won modal as the game is completed
+//   }
+// }
 function handleLevelTransition() {
   console.log("Handling level transition for level:", currentLevel);
+  const score = timeLeft * 5; // Calculate score based on time remaining
+
+  // Update high scores for the current level
+  updateHighScores(currentLevel, score);
+
   if (currentLevel === 1) {
-    showLevelTransitionModal(timeLeft); // Show transition modal with time left
-    setTimeout(() => {
-      level2(); // Move to Level 2 after 3 seconds
-    }, 3000); // 3 seconds delay
+      showLevelTransitionModal(timeLeft, score, currentLevel); // Show transition modal with time left and score
+      setTimeout(() => {
+          level2(); // Move to Level 2 after 3 seconds
+      }, 3000); // 3 seconds delay
   }
   if (currentLevel === 2) {
-    showLevelTransitionModal(timeLeft); // Show transition modal with time left
-    setTimeout(() => {
-      level3(); // Move to Level 3 after 3 seconds
-    }, 3000); // 3 seconds delay
+      showLevelTransitionModal(timeLeft, score, currentLevel); // Show transition modal with time left and score
+      setTimeout(() => {
+          level3(); // Move to Level 3 after 3 seconds
+      }, 3000); // 3 seconds delay
   } else if (currentLevel === 3) {
-    clearInterval(timerId); // Stop the timer
-    showGameWon(); // Show game won modal as the game is completed
+      clearInterval(timerId); // Stop the timer
+      showGameWon(); // Show game won modal as the game is completed
   }
 }
-
-// Function to show the level transition modal
-function showLevelTransitionModal(timeRemaining) {
-  const message = `You completed Level ${currentLevel} with ${timeRemaining} seconds remaining!`;
-  document.getElementById('levelTransitionMessage').innerText = message;
-  document.getElementById('levelTransitionModal').style.display = 'flex'; // Show the modal
-}
-
 // Add event listener for the continue button
 document.getElementById('continueButton').addEventListener('click', () => {
   document.getElementById('levelTransitionModal').style.display = 'none'; // Hide the modal
+  // Proceed to the next level if applicable
+  if (currentLevel === 1) {
+    level2(); // Move to Level 2
+  } else if (currentLevel === 2) {
+    level3(); // Move to Level 3
+  }
 });
 
+// function showLevelTransitionModal(timeRemaining, score, highScores) {
+//   const message = `Congratulations! You completed Level ${currentLevel} with ${timeRemaining} seconds remaining! Your score: ${score} points.`;
+//   document.getElementById('levelTransitionMessage').innerText = message;
 
+//   // Display high scores
+//   let highScoresMessage = "High Scores:\n";
+//   highScores.forEach((highScore, index) => {
+//     highScoresMessage += `${index + 1}. ${highScore} points\n`;
+//   });
+//   document.getElementById('levelTransitionMessage').innerText += "\n" + highScoresMessage;
+
+//   document.getElementById('levelTransitionModal').style.display = 'flex'; // Show the modal
+// }
+
+// // Add event listener for the continue button
+// document.getElementById('continueButton').addEventListener('click', () => {
+//   document.getElementById('levelTransitionModal').style.display = 'none'; // Hide the modal
+// });
+
+function showLevelTransitionModal(timeRemaining, score, level) {
+  const message = `Congratulations! You completed Level ${level} with ${timeRemaining} seconds remaining! Your score: ${score} points.`;
+  document.getElementById('levelTransitionMessage').innerText = message;
+
+  // Load high scores from localStorage
+  const highScores = loadHighScores(level);
+
+  // Display high scores
+  let highScoresMessage = "High Scores:\n";
+  highScores.forEach((highScore, index) => {
+      highScoresMessage += `${index + 1}. ${highScore} points\n`;
+  });
+  document.getElementById('levelTransitionMessage').innerText += "\n" + highScoresMessage;
+
+  document.getElementById('levelTransitionModal').style.display = 'flex'; // Show the modal
+
+  // Add event listener for the continue button
+  document.getElementById('continueButton').onclick = () => {
+      document.getElementById('levelTransitionModal').style.display = 'none'; // Hide the modal
+      // Proceed to the next level if applicable
+      if (currentLevel === 1) {
+          level2(); // Move to Level 2
+      } else if (currentLevel === 2) {
+          level3(); // Move to Level 3
+      }
+  };
+}
 // Function to reset the player position at the start of each level
 function resetPlayerPosition() {
   if (character) {
